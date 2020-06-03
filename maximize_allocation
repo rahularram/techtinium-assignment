@@ -181,7 +181,9 @@ get_details(result);
 int main() 
 { 
 	int hours,units;
+	cout<<"Enter capacity in units:"<<endl;
 	cin>>units;
+	cout<<"Enter Hours:"<<endl;
 	cin>>hours;
 	print_output(units,hours);
 } 
