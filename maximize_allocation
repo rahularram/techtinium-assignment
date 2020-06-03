@@ -1,0 +1,187 @@
+
+#include <bits/stdc++.h> 
+using namespace std; 
+map<int, map<int, int>> q5;
+
+
+int countFreq(map<int, int> q,vector<int>& ar, int n,string country) 
+
+{ 
+ 
+    unordered_map<int, int> mp;
+    for (int i = 0; i < n; i++) 
+
+        mp[ar[i]]++;
+
+int result=0;
+    for (auto x : mp) 
+{
+    
+    result+=q.find(x.first)->second*x.second;
+    
+    
+}
+
+ q5.insert(make_pair(result, map<int, int>())); 
+  			        for (auto x : mp) 
+{
+		q5[result].insert(make_pair(x.first, x.second)); 
+}
+
+return result;
+}
+
+void findNumbers(vector<int>& ar, int sum, 
+				vector<vector<int> >& res, 
+				vector<int>& r, int i) 
+{ 
+	if (sum < 0) 
+		return; 
+	if (sum == 0) 
+	{ 
+		res.push_back(r); 
+		return; 
+	} 
+	while (i < ar.size() && sum - ar[i] >= 0) 
+	{ 
+		r.push_back(ar[i]); 
+		findNumbers(ar, sum - ar[i], res, r, i); 
+		i++; 
+		r.pop_back(); 
+	} 
+} 
+
+vector<vector<int> > combinationSum(int sum,string country) 
+{ 
+    int result;
+	vector<int> ar; 
+	if(country=="NewYork"){
+	ar.push_back(10); 
+	ar.push_back(20); 
+	ar.push_back(40); 
+	ar.push_back(80); 
+	ar.push_back(160); 
+	ar.push_back(320); 
+	}
+	if(country=="India"){
+	ar.push_back(10); 
+	ar.push_back(40); 
+	ar.push_back(80); 
+	ar.push_back(160); 
+	ar.push_back(320);   
+	}
+	if(country=="China"){
+	ar.push_back(10); 
+	ar.push_back(20);
+	ar.push_back(80); 
+	ar.push_back(160);   
+	}
+
+	int n = ar.size(); 
+	
+	sort(ar.begin(), ar.end()); 
+
+	ar.erase(unique(ar.begin(), ar.end()), ar.end()); 
+
+	vector<int> r; 
+	vector<vector<int> > res; 
+	findNumbers(ar, sum, res, r, 0); 
+
+	return res; 
+} 
+
+int get_desired(vector<vector<int> > res,string country){
+     int result=INT_MAX,final=0;
+        map<int, int> q; 
+  if(country=="NewYork"){
+    q.insert(pair<int, int>(10, 120)); 
+    q.insert(pair<int, int>(20, 230)); 
+    q.insert(pair<int, int>(40, 450)); 
+    q.insert(pair<int, int>(80, 774)); 
+    q.insert(pair<int, int>(160, 1400)); 
+    q.insert(pair<int, int>(320, 2820)); 
+  }
+  if(country=="India"){
+    q.insert(pair<int, int>(10, 140)); 
+    q.insert(pair<int, int>(40, 413)); 
+    q.insert(pair<int, int>(80, 890)); 
+    q.insert(pair<int, int>(160, 1300)); 
+    q.insert(pair<int, int>(320, 2970)); 
+  }
+    if(country=="China"){
+    q.insert(pair<int, int>(10, 110)); 
+    q.insert(pair<int, int>(20, 200)); 
+    q.insert(pair<int, int>(80, 670)); 
+    q.insert(pair<int, int>(160, 1180)); 
+  }
+  
+  
+  
+	if (res.size() == 0) 
+	{ 
+		cout << "Emptyn"; 
+		return 0; 
+	} 
+
+	for (int i = 0; i < res.size(); i++) 
+	{ 
+	    vector<int> ar3; 
+		if (res[i].size() > 0) 
+		{ 
+			for (int j = 0; j < res[i].size(); j++) 
+			{	
+			    ar3.push_back(res[i][j]); 
+			}
+			final=countFreq(q,ar3,ar3.size(),country);
+			if(result>final)
+			{
+			    result=final;
+			}
+			}
+		}
+		return result;
+}
+void get_details(int result){
+    map<int, string> q; 
+    q.insert(pair<int, string>(10, "Large")); 
+    q.insert(pair<int, string>(20, "XLarge")); 
+    q.insert(pair<int, string>(40, "2XLarge")); 
+    q.insert(pair<int, string>(80, "4XLarge")); 
+    q.insert(pair<int, string>(160, "8XLarge")); 
+    q.insert(pair<int, string>(320, "10XLarge")); 
+    
+	map<int, map<int, int> >::iterator itr; 
+	map<int, int>::iterator ptr; 
+    	for (itr = q5.begin(); itr != q5.end(); itr++) { 
+
+		for (ptr = itr->second.begin(); ptr != itr->second.end(); ptr++) { 
+		    if(itr->first==result){
+			cout << q.find(ptr->first)->second 
+				<< " : " << ptr->second << endl; 
+		    }
+		} 
+    	}
+}
+void print_output(int units,int hours){
+   int result=0;
+	vector<vector<int> > res1 = combinationSum(units,"NewYork"); 
+	vector<vector<int> > res2 = combinationSum(units,"India"); 
+	vector<vector<int> > res3 = combinationSum(units,"China"); 
+	cout<<"Minimum cost capacity"<<endl;
+result=get_desired(res1,"NewYork");
+cout<<"NewYork --"<<result*hours<<endl;
+get_details(result);
+result=get_desired(res2,"India");
+cout<<"India --"<<result*hours<<endl;
+get_details(result);
+result=get_desired(res3,"China");
+cout<<"China --"<<result*hours<<endl;
+get_details(result);
+}
+int main() 
+{ 
+	int hours,units;
+	cin>>units;
+	cin>>hours;
+	print_output(units,hours);
+} 
